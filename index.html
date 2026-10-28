@@ -56,7 +56,9 @@ a:hover{color:var(--ac)}
 .fill,.card.ver{display:flex;flex-direction:column}
 .card.ver .why{margin-top:auto}
 #steps,#alt{flex:1;display:flex;flex-direction:column}
-.steps label{flex:1;align-items:center;padding:8px 0}
+#steps{align-items:flex-start;gap:0}
+.steps label{flex:0 0 auto;width:100%;max-width:38rem;align-items:flex-start;padding:9px 0;line-height:1.4}
+.steps label span{min-width:0;max-width:34rem}
 .rt{flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:.9rem;transition:all .2s ease-in-out}
 .rt:last-child{border:0}
 .rt .t{display:flex;justify-content:space-between;gap:10px}
