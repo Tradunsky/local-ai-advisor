@@ -65,6 +65,14 @@ a:hover{color:var(--ac)}
 .rt .bar{height:4px;background:var(--bar);border-radius:4px;overflow:hidden}
 .rt .bar i{display:block;height:100%;background:var(--mut);border-radius:4px;transition:width .4s ease-in-out}
 .rt.win .bar i{background:var(--ac)}
+.cmp-note{font-size:.82rem;margin:-5px 0 12px}
+.rt .nm{display:flex;align-items:center;gap:7px;min-width:0}
+.rt .rank{font: .75rem/1.4 system-ui,sans-serif;color:var(--mut);min-width:1.2em}
+.rt .price small{font: .72rem/1.4 system-ui,sans-serif;color:var(--mut)}
+.rt .scoreline{display:flex;align-items:center;gap:10px}
+.rt .scoreline .bar{flex:1}
+.rt .scoreline>span{font: .75rem/1.4 "Geist Mono",ui-monospace,monospace;color:var(--mut);min-width:2.2em;text-align:right}
+.rt .over{font-size:.72rem;color:var(--mut)}
 .tag{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:500;color:var(--ac)}
 .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ac)}
 .big{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:600;letter-spacing:-.04em;line-height:1.08;margin:14px 0 12px}
@@ -95,7 +103,7 @@ p{margin:0 0 10px}
 <div class="layout">
 <div class="card" id="qs"></div>
 <div class="card ver" id="verdict"></div>
-<div class="card fill cmp"><h2><span>Compare</span><span>fit score</span></h2><div id="alt"></div></div>
+<div class="card fill cmp"><h2><span>Compare options</span><span>Fit / 10</span></h2><p class="mut cmp-note">Ranked for your priority. Hardware prices are upfront; rent is per month.</p><div id="alt"></div></div>
 <div class="card fill steps"><h2><span>Setup</span><span id="pc"></span></h2><div id="steps"></div><div class="prog"><i id="pg"></i></div></div>
 </div>
 <p class="foot">Figures come from the video description (prices checked Sep 22 to Oct 10, 2026). Items marked est are my estimates. Prices and speeds shift fast, so verify before buying.</p>
@@ -136,10 +144,10 @@ var BR={"amd":{"v":"0 9 24 6","h":0.72,"d":"<path d=\"M18.324 9.137l1.559 1.56h2
 function mono(n){var p=PV[n];if(!p)return"";return '<i class="mn">'+CODE[p[0]].map(function(k){var b=BR[k];return '<svg viewBox="'+b.v+'" style="height:'+b.h+'em"'+(b.s?' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"':' fill="currentColor"')+'>'+b.d+'</svg>'}).join("")+'</i>'}
 function pvd(n){var p=PV[n];return p?'<span class="pvd">'+mono(n)+p[1]+'</span>':""}
 function cmp(win){
- var A=O.map(function(o){var c=o.c(S.own);return{n:o.n,p:$f(c),ok:c<=S.budget,f:fit(o)}});
+ var A=O.map(function(o){var c=o.c(S.own);return{n:o.n,p:$f(c),priceType:"upfront",ok:c<=S.budget,f:fit(o),r:0}});
+ A.push({n:"Rent RTX PRO 6000",p:$f(S.use*2.49),priceType:"/ month",ok:1,f:fit({a:{speed:7,quality:9,ctx:8,calm:9.5}}),r:1});
  A.sort(function(a,b){return b.f-a.f});
- A.push({n:"Rent RTX PRO 6000",p:$f(S.use*2.49)+"/mo",ok:1,f:fit({a:{speed:7,quality:9,ctx:8,calm:9.5}}),r:1});
- return A.map(function(a){var w=win===null?a.r:a.n===win;return '<div class="rt'+(a.ok?"":" out")+(w?" win":"")+'"><div class="t"><span class="nm">'+mono(a.n)+a.n+'</span><span>'+a.p+'</span></div><div class="bar"><i style="width:'+a.f*10+'%"></i></div></div>'}).join("");
+ return A.map(function(a,i){var w=a.r?win===null:win===a.n;return '<div class="rt'+(a.ok?"":" out")+(w?" win":"")+'"><div class="t"><span class="nm"><span class="rank">'+(i+1)+'.</span>'+mono(a.n)+a.n+'</span><span class="price">'+a.p+' <small>'+a.priceType+'</small></span></div><div class="scoreline"><div class="bar"><i style="width:'+Math.max(0,Math.min(10,a.f))*10+'%"></i></div><span>'+a.f.toFixed(1)+'</span></div>'+(a.ok||a.r?'':'<small class="over">Over budget</small>')+'</div>'}).join("");
 }
 var ICN={speed:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',quality:'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/>',ctx:'<path d="M4 6h16M4 11h16M4 16h10"/>',calm:'<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>'};
 function decide(s){
