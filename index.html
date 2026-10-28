@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Local AI: Build, Buy or Rent?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#fafafa;--card:rgba(255,255,255,.8);--fg:#0a0a0a;--mut:#737373;--ac:#059669;--bd:rgba(0,0,0,.09);--bar:rgba(0,0,0,.06);--glass:rgba(250,250,250,.75);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a0a;--card:rgba(20,20,20,.8);--fg:#ededed;--mut:#8f8f8f;--ac:#34d399;--bd:rgba(255,255,255,.1);--bar:rgba(255,255,255,.08);--glass:rgba(10,10,10,.7);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0a0a;--card:rgba(20,20,20,.8);--fg:#ededed;--mut:#8f8f8f;--ac:#34d399;--bd:rgba(255,255,255,.1);--bar:rgba(255,255,255,.08);--glass:rgba(10,10,10,.7);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 Geist,Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--glass);backdrop-filter:blur(14px);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.hd{max-width:1080px;margin:0 auto;padding:14px 24px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.hd i{width:8px;height:8px;border-radius:50%;background:var(--ac)}
+main{max-width:1080px;margin:0 auto;padding:72px 24px 80px}
+h1{font-size:clamp(2.2rem,6vw,4.2rem);line-height:1;letter-spacing:-.05em;font-weight:600;margin:0 0 18px}
+.lede{color:var(--mut);max-width:80ch;margin:0 0 56px;font-size:1.05rem}
+.layout{display:grid;grid-template-columns:5fr 7fr;gap:16px;align-items:stretch}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.cmp{order:4}main{padding-top:44px}}
+.card{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:16px;padding:28px;transition:all .2s ease-in-out}
+.q{margin-bottom:28px}.q:last-child{margin:0}
+.q h3{font-size:.8rem;font-weight:500;color:var(--mut);margin:0 0 12px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}.opts.col{flex-direction:column}
+.pill{font:inherit;font-size:.9rem;color:var(--fg);background:transparent;border:1px solid var(--bd);border-radius:12px;padding:9px 14px;cursor:pointer;text-align:left;transition:all .2s ease-in-out}
+.col .pill{width:100%}
+.pill:hover{border-color:var(--fg)}
+.pill:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pill.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.seg{position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);background:var(--bar);border-radius:14px;padding:3px}
+.seg.v{grid-template-columns:1fr}
+.th{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/var(--n));background:var(--fg);border-radius:11px;transform:translateX(calc(var(--i,0)*100%));transition:transform .3s cubic-bezier(.3,.9,.3,1)}
+.seg.v .th{right:3px;width:auto;top:3px;bottom:auto;height:calc((100% - 6px)/var(--n));transform:translateY(calc(var(--i,0)*100%))}
+.sg{position:relative;z-index:1;font:inherit;font-size:.9rem;background:none;border:0;border-radius:11px;padding:11px 14px;color:var(--mut);cursor:pointer;transition:color .25s ease-in-out}
+.seg.v .sg{text-align:left}
+.sg:hover{color:var(--fg)}.sg.on,.sg.on:hover{color:var(--bg)}
+.sg:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ac);text-decoration-thickness:1.5px;text-underline-offset:3px;transition:all .2s ease-in-out}
+a:hover{color:var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pvd{display:inline-flex;align-items:center;gap:10px;font-size:.82rem;color:var(--mut)}
+.mn{font-style:normal;font-size:16px;min-width:32px;height:32px;padding:0 9px;border-radius:9px;border:1px solid var(--bd);display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--fg);flex:none;transition:all .2s ease-in-out}.mn svg{width:auto;display:block}
+.rt .nm{display:flex;align-items:center;gap:10px}
+.rt .mn{font-size:12px;min-width:28px;height:28px;padding:0 7px;gap:6px;border-radius:8px}
+.rt.win .mn{border-color:var(--ac);color:var(--ac)}
+.q h3 span{float:right;font-weight:400;font-size:.72rem;opacity:.85}
+.opts.g2{display:grid;grid-template-columns:1fr 1fr}
+.pc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px}
+.pc svg{width:18px;height:18px;margin-bottom:8px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.pc b,.sg b{font-weight:500}
+.pv{font:500 .72rem "Geist Mono",ui-monospace,monospace;color:var(--mut);transition:all .2s ease-in-out}
+.pill.on .pv,.sg.on .pv{color:var(--bg);opacity:.7}
+.sg{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px}
+.seg.v .sg{align-items:flex-start;padding:11px 14px}
+.fill,.card.ver{display:flex;flex-direction:column}
+.card.ver .why{margin-top:auto}
+#steps,#alt{flex:1;display:flex;flex-direction:column}
+.steps label{flex:1;align-items:center;padding:8px 0}
+.rt{flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:.9rem;transition:all .2s ease-in-out}
+.rt:last-child{border:0}
+.rt .t{display:flex;justify-content:space-between;gap:10px}
+.rt .t span:last-child{font-family:"Geist Mono",ui-monospace,monospace;font-size:.82rem;color:var(--mut);white-space:nowrap}
+.rt.out{opacity:.35}.rt.win .t span:first-child{font-weight:600}
+.rt .bar{height:4px;background:var(--bar);border-radius:4px;overflow:hidden}
+.rt .bar i{display:block;height:100%;background:var(--mut);border-radius:4px;transition:width .4s ease-in-out}
+.rt.win .bar i{background:var(--ac)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:500;color:var(--ac)}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ac)}
+.big{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:600;letter-spacing:-.04em;line-height:1.08;margin:14px 0 12px}
+.mut{color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin:26px 0}
+.stats div{background:var(--bg);padding:16px}
+.stats b{display:block;font:500 1.2rem "Geist Mono",ui-monospace,monospace;letter-spacing:-.03em}
+.stats span{font-size:.75rem;color:var(--mut)}
+.why{font-size:.9rem;color:var(--mut);padding-top:20px;border-top:1px solid var(--bd);margin:0}
+.why b{color:var(--fg);font-weight:500}
+.sub{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.sub{grid-template-columns:1fr}}
+h2{font-size:.8rem;font-weight:500;color:var(--mut);margin:0 0 14px;display:flex;justify-content:space-between}
+.steps label{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--bd);cursor:pointer;align-items:flex-start;transition:all .2s ease-in-out;font-size:.9rem}
+.steps label:last-of-type{border:0}
+.steps input{margin-top:4px;width:15px;height:15px;accent-color:var(--ac)}
+.steps input:checked+span{color:var(--mut);text-decoration:line-through}
+.prog{height:3px;background:var(--bar);border-radius:3px;margin-top:10px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s ease-in-out}
+.alt{display:flex;justify-content:space-between;gap:12px;font-size:.9rem;padding:4px 0}
+.alt span:last-child{font-family:"Geist Mono",ui-monospace,monospace;color:var(--mut);white-space:nowrap}
+p{margin:0 0 10px}
+.foot{color:var(--mut);font-size:.8rem;margin-top:40px;max-width:none}
+</style></head><body>
+<header><div class="hd"><i></i>Local AI Advisor</div></header>
+<main>
+<h1>Build, buy<br>or rent.</h1>
+<p class="lede">Four quick choices. Get the right local AI setup for Qwen 3.8 Flash-Next, with the exact steps to get it running. Based on <a href="https://www.youtube.com/watch?v=NA9D49kQFuU" target="_blank" rel="noopener">Every Ways to Get 128GB VRAM for Local AI at Full Context</a> by Kai (Oct 2026).</p>
+<div class="layout">
+<div class="card" id="qs"></div>
+<div class="card ver" id="verdict"></div>
+<div class="card fill cmp"><h2><span>Compare</span><span>fit score</span></h2><div id="alt"></div></div>
+<div class="card fill steps"><h2><span>Setup</span><span id="pc"></span></h2><div id="steps"></div><div class="prog"><i id="pg"></i></div></div>
+</div>
+<p class="foot">Figures come from the video description (prices checked Sep 22 to Oct 10, 2026). Items marked est are my estimates. Prices and speeds shift fast, so verify before buying.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+function $f(n){return "$"+Math.round(n).toLocaleString("en-US")}
+var Q=[
+{k:"budget",t:"Budget",o:[[1000,"Up to $1,000"],[2500,"$2,500"],[3500,"$3,500"],[5500,"$5,500"],[7000,"$7,000+"]]},
+{k:"own",t:"Hardware today",seg:1,col:1,o:[[1,"I have a PC with a 12GB GPU"],[0,"Starting from scratch"]]},
+{k:"pri",t:"Most important",g:1,pv:1,cap:"price and speed of the pick",o:[["speed","Speed"],["quality","Quality"],["ctx","Long prompts"],["calm","Quiet and simple"]]},
+{k:"use",t:"How much will you use it",seg:1,pv:1,cap:"monthly rent",o:[[20,"A little"],[60,"Regularly"],[200,"All day"]]}];
+var S={budget:3500,own:1,pri:"quality",use:60};
+var O=[
+{n:"12GB GPU + 64GB RAM",c:function(o){return o?930:2400},est:function(o){return!o},bits:3,t:"50-62",a:{speed:9,quality:5,ctx:4,calm:6.5},note:"Runs the 3-bit build with Strata expert offloading. Pushing to 4-bit drops it to 21-33 tok/s.",
+ st:["Install GPU driver and CUDA (or ROCm)","Add 64GB DDR5 (about $930 now) and enable XMP or EXPO","Install Strata from github.com/Niko1221/Strata","Download UD-Q3_K_XL (3-bit, 90 GB) of Qwen3.8-Flash-Next","Run it through Strata, expect 50-62 tok/s"]},
+{n:"Strix Halo 128GB mini PC",c:function(){return 3099},bits:4,t:"47-54",a:{speed:7,quality:8,ctx:6,calm:7},note:"Ryzen AI Max+ 395. Windows caps GPU memory at 96GB, so use Linux and a tuned engine. One box went from 23 minutes to 2 on a 160k prompt.",
+ st:["Install Linux for full unified memory access","Raise the GPU memory limit above 96GB","Install llama.cpp (Vulkan or ROCm) as a baseline","Try a tuned engine: Gufo, Strata or Halogen","Download UD-IQ4_XS (4-bit, 94 GB) for room to spare, or UD-Q4_K_XL (111 GB), then test a 100k+ prompt"]},
+{n:"Mac Studio M5 Max 128GB",c:function(){return 5099},bits:4,t:"40-75",a:{speed:8.5,quality:8,ctx:7,calm:9},note:"614 GB/s memory. About 40 tok/s on prose and 75 on code. GPU memory is capped near 96GB until you raise it.",
+ st:["Update macOS and install Homebrew","Raise the limit: sudo sysctl iogpu.wired_limit_mb=...","Install MLX (pip install mlx-lm)","Download mlx-community/Qwen3.8-Flash-Next-4bit (4-bit MLX)","Run mlx_lm.server with that model and point your agent at it"]},
+{n:"NVIDIA DGX Spark",c:function(){return 6950},bits:4,t:"41",a:{speed:6,quality:8,ctx:9,calm:7},note:"Strongest prefill for coding agents, though about 48GB of the 4-bit file stays on SSD.",
+ st:["Update DGX OS and the CUDA stack","Install vLLM or a llama.cpp CUDA build","Follow the community Flash-Next DGX Spark recipe","Download UD-Q4_K_XL (4-bit, 111 GB) of Qwen3.8-Flash-Next","Use fast NVMe for the 48GB SSD offload","Serve over an OpenAI-compatible API"]},
+{n:"Surface Laptop Ultra 128GB",c:function(){return 5899.99},bits:4,t:"n/a",a:{speed:6,quality:8,ctx:6,calm:7},note:"Portable 128GB with RTX Spark. Windows applies the GPU memory cap, and the source gives no speed.",
+ st:["Update Windows and NVIDIA drivers","Install a llama.cpp CUDA build or LM Studio","Check the GPU memory cap","Download UD-IQ4_XS (4-bit, 94 GB) and benchmark it yourself"]},
+{n:"4x 32GB GPUs",c:function(){return 6200},est:function(){return 1},bits:4,t:"n/a",a:{speed:7,quality:9,ctx:8,calm:2},note:"Real VRAM from B70, R9700, V620 or MI50 cards, at the cost of power, noise and driver work.",
+ st:["Get a 4-slot board and a 1500W+ PSU","Install ROCm or Intel oneAPI","Build llama.cpp with multi-GPU split","Tune tensor split and watch thermals","Download UD-Q4_K_XL (4-bit, 111 GB) and load it fully in VRAM"]}];
+var RENT={n:"Rent RTX PRO 6000",st:["Create a RunPod account and add credit","Launch an RTX PRO 6000 pod with a vLLM template","Download UD-IQ4_XS (4-bit, 94 GB) to a persistent volume, keep context modest on the 96GB card","Stop the pod when idle to stop the meter"]};
+function fit(o,p){p=p||S.pri;var s=0;["speed","quality","ctx","calm"].forEach(function(k){s+=o.a[k]*(k===p?3:1)});return s/6}
+var LK=[["Gufo, Strata or Halogen","https://www.youtube.com/watch?v=NA9D49kQFuU"],["community Flash-Next DGX Spark recipe","https://www.youtube.com/watch?v=NA9D49kQFuU"],["mlx-community/Qwen3.8-Flash-Next-4bit","https://huggingface.co/mlx-community/Qwen3.8-Flash-Next-4bit"],["UD-Q3_K_XL","https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"],["UD-IQ4_XS","https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"],["UD-Q4_K_XL","https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF"],["Qwen3.8-Flash-Next","https://huggingface.co/Qwen/Qwen3.8-Flash-Next"],["GPU memory limit","https://rocm.docs.amd.com/en/latest/how-to/system-optimization/strixhalo.html"],["iogpu.wired_limit_mb","https://mehmetbaykar.com/posts/increase-vram-apple-silicon-local-llm/"],["Linux","https://github.com/burrellka/MyStrixHaloSetup"],["NVIDIA drivers","https://www.nvidia.com/Download/index.aspx"],["DGX OS","https://docs.nvidia.com/dgx/dgx-spark/"],["Strata","https://github.com/Niko1221/Strata"],["llama.cpp","https://github.com/ggml-org/llama.cpp"],["LM Studio","https://lmstudio.ai"],["Homebrew","https://brew.sh"],["MLX","https://github.com/ml-explore/mlx-lm"],["vLLM","https://docs.vllm.ai"],["CUDA","https://developer.nvidia.com/cuda-downloads"],["ROCm","https://rocm.docs.amd.com"],["oneAPI","https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html"],["RunPod","https://docs.runpod.io"]];
+function L(s){var out=[];LK.forEach(function(t){if(s.indexOf(t[0])>-1){s=s.replace(t[0],"\u0001"+out.length+"\u0002");out.push('<a href="'+t[1]+'" target="_blank" rel="noopener">'+t[0]+'</a>')}});return s.replace(/\u0001(\d+)\u0002/g,function(m,i){return out[i]})}
+function draw(){
+ $("qs").innerHTML=Q.map(function(q){var b=q.o.map(function(x,i){return '<button class="'+(q.seg?"sg":q.g?"pill pc":"pill")+'" data-k="'+q.k+'" data-v="'+x[0]+'">'+(q.g?'<svg viewBox="0 0 24 24">'+ICN[x[0]]+'</svg>':"")+'<b>'+x[1]+'</b>'+(q.pv?'<span class="pv"></span>':"")+'</button>'}).join("");return '<div class="q"><h3>'+q.t+(q.cap?'<span>'+q.cap+'</span>':"")+'</h3>'+(q.seg?'<div class="seg'+(q.col?" v":"")+'" style="--n:'+q.o.length+'"><i class="th"></i>'+b+'</div>':'<div class="opts'+(q.g?" g2":"")+'">'+b+'</div>')+'</div>'}).join("");
+ document.querySelectorAll("[data-k]").forEach(function(b){b.onclick=function(){var v=b.dataset.v;S[b.dataset.k]=isNaN(+v)?v:+v;sync();run()}});
+ sync();
+}
+var PV={"12GB GPU + 64GB RAM":["PC","Your PC"],"Strix Halo 128GB mini PC":["AM","AMD Ryzen AI Max+ 395"],"Mac Studio M5 Max 128GB":["AP","Apple M5 Max"],"NVIDIA DGX Spark":["NV","NVIDIA"],"Surface Laptop Ultra 128GB":["MS","Microsoft + NVIDIA RTX Spark"],"4x 32GB GPUs":["GP","AMD or Intel Arc cards"],"Rent RTX PRO 6000":["RP","RunPod cloud"]};
+var BR={"amd":{"v":"0 9 24 6","h":0.72,"d":"<path d=\"M18.324 9.137l1.559 1.56h2.556v2.557L24 14.814V9.137zM2 9.52l-2 4.96h1.309l.37-.982H3.9l.408.982h1.338L3.432 9.52zm4.209 0v4.955h1.238v-3.092l1.338 1.562h.188l1.338-1.556v3.091h1.238V9.52H10.47l-1.592 1.845L7.287 9.52zm6.283 0v4.96h2.057c1.979 0 2.88-1.046 2.88-2.472 0-1.36-.937-2.488-2.747-2.488zm1.237.91h.792c1.17 0 1.63.711 1.63 1.57 0 .728-.372 1.572-1.616 1.572h-.806zm-10.985.273l.791 1.932H2.008zm17.137.307l-1.604 1.603v2.25h2.246l1.604-1.607h-2.246z\"/>"},"intel":{"v":"0 7 24 10","h":0.8,"d":"<path d=\"M20.42 7.345v9.18h1.651v-9.18zM0 7.475v1.737h1.737V7.474zm9.78.352v6.053c0 .513.044.945.13 1.292.087.34.235.618.44.828.203.21.475.359.803.451.334.093.754.136 1.255.136h.216v-1.533c-.24 0-.445-.012-.593-.037a.672.672 0 0 1-.39-.173.693.693 0 0 1-.173-.377 4.002 4.002 0 0 1-.037-.606v-2.182h1.193v-1.416h-1.193V7.827zm-3.505 2.312c-.396 0-.76.08-1.082.241-.327.161-.6.384-.822.668l-.087.117v-.902H2.658v6.256h1.639v-3.214c.018-.588.16-1.02.433-1.299.29-.297.642-.445 1.044-.445.476 0 .841.149 1.082.433.235.284.359.686.359 1.2v3.324h1.663V12.97c.006-.89-.229-1.595-.686-2.09-.458-.495-1.1-.742-1.917-.742zm10.065.006a3.252 3.252 0 0 0-2.306.946c-.29.29-.525.637-.692 1.033a3.145 3.145 0 0 0-.254 1.273c0 .452.08.878.241 1.274.161.395.39.742.674 1.032.284.29.637.526 1.045.693.408.173.86.26 1.342.26 1.397 0 2.262-.637 2.782-1.23l-1.187-.904c-.248.297-.841.699-1.583.699-.464 0-.847-.105-1.138-.321a1.588 1.588 0 0 1-.593-.872l-.019-.056h4.915v-.587c0-.451-.08-.872-.235-1.267a3.393 3.393 0 0 0-.661-1.033 3.013 3.013 0 0 0-1.02-.692 3.345 3.345 0 0 0-1.311-.248zm-16.297.118v6.256h1.651v-6.256zm16.278 1.286c1.132 0 1.664.797 1.664 1.255l-3.32.006c0-.458.525-1.255 1.656-1.261zm7.073 3.814a.606.606 0 0 0-.606.606.606.606 0 0 0 .606.606.606.606 0 0 0 .606-.606.606.606 0 0 0-.606-.606zm-.008.105a.5.5 0 0 1 .002 0 .5.5 0 0 1 .5.501.5.5 0 0 1-.5.5.5.5 0 0 1-.5-.5.5.5 0 0 1 .498-.5zm-.233.155v.699h.13v-.285h.093l.173.285h.136l-.18-.297a.191.191 0 0 0 .118-.056c.03-.03.05-.074.05-.136 0-.068-.02-.117-.063-.154-.037-.038-.105-.056-.185-.056zm.13.099h.154c.019 0 .037.006.056.012a.064.064 0 0 1 .037.031c.013.013.012.031.012.056a.124.124 0 0 1-.012.055.164.164 0 0 1-.037.031c-.019.006-.037.013-.056.013h-.154Z\"/>"},"nvidia":{"v":"0 4 24 16","h":0.95,"d":"<path d=\"M8.948 8.798v-1.43a6.7 6.7 0 0 1 .424-.018c3.922-.124 6.493 3.374 6.493 3.374s-2.774 3.851-5.75 3.851c-.398 0-.787-.062-1.158-.185v-4.346c1.528.185 1.837.857 2.747 2.385l2.04-1.714s-1.492-1.952-4-1.952a6.016 6.016 0 0 0-.796.035m0-4.735v2.138l.424-.027c5.45-.185 9.01 4.47 9.01 4.47s-4.08 4.964-8.33 4.964c-.37 0-.733-.035-1.095-.097v1.325c.3.035.61.062.91.062 3.957 0 6.82-2.023 9.593-4.408.459.371 2.34 1.263 2.73 1.652-2.633 2.208-8.772 3.984-12.253 3.984-.335 0-.653-.018-.971-.053v1.864H24V4.063zm0 10.326v1.131c-3.657-.654-4.673-4.46-4.673-4.46s1.758-1.944 4.673-2.262v1.237H8.94c-1.528-.186-2.73 1.245-2.73 1.245s.68 2.412 2.739 3.11M2.456 10.9s2.164-3.197 6.5-3.533V6.201C4.153 6.59 0 10.653 0 10.653s2.35 6.802 8.948 7.42v-1.237c-4.84-.6-6.492-5.936-6.492-5.936z\"/>"},"apple":{"v":"3 0 18 24","h":1,"d":"<path d=\"M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701\"/>"},"ms":{"v":"0 0 22 22","h":0.85,"d":"<path d=\"M0 0h10v10H0zM12 0h10v10H12zM0 12h10v10H0zM12 12h10v10H12z\"/>"},"cloud":{"v":"0 0 24 24","h":1,"s":1,"d":"<path d=\"M17.5 19a4.5 4.5 0 1 0 0-9 6 6 0 0 0-11.7 1.5A4 4 0 0 0 6 19z\"/>"},"pc":{"v":"0 0 24 24","h":1,"s":1,"d":"<rect x=\"3\" y=\"4\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 20h8M12 16v4\"/>"}};var CODE={"PC":["pc"],"AM":["amd"],"AP":["apple"],"NV":["nvidia"],"MS":["ms","nvidia"],"GP":["amd","intel"],"RP":["cloud"]};
+function mono(n){var p=PV[n];if(!p)return"";return '<i class="mn">'+CODE[p[0]].map(function(k){var b=BR[k];return '<svg viewBox="'+b.v+'" style="height:'+b.h+'em"'+(b.s?' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"':' fill="currentColor"')+'>'+b.d+'</svg>'}).join("")+'</i>'}
+function pvd(n){var p=PV[n];return p?'<span class="pvd">'+mono(n)+p[1]+'</span>':""}
+function cmp(win){
+ var A=O.map(function(o){var c=o.c(S.own);return{n:o.n,p:$f(c),ok:c<=S.budget,f:fit(o)}});
+ A.sort(function(a,b){return b.f-a.f});
+ A.push({n:"Rent RTX PRO 6000",p:$f(S.use*2.49)+"/mo",ok:1,f:fit({a:{speed:7,quality:9,ctx:8,calm:9.5}}),r:1});
+ return A.map(function(a){var w=win===null?a.r:a.n===win;return '<div class="rt'+(a.ok?"":" out")+(w?" win":"")+'"><div class="t"><span class="nm">'+mono(a.n)+a.n+'</span><span>'+a.p+'</span></div><div class="bar"><i style="width:'+a.f*10+'%"></i></div></div>'}).join("");
+}
+var ICN={speed:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',quality:'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/>',ctx:'<path d="M4 6h16M4 11h16M4 16h10"/>',calm:'<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>'};
+function decide(s){
+ var mo=s.use*2.49,el=O.map(function(o){return{o:o,c:o.c(s.own),f:fit(o,s.pri)}}).filter(function(r){return r.c<=s.budget}).sort(function(a,b){return b.f-a.f}),bb=el[0];
+ return(!bb||bb.c/mo>18)?{rent:1,mo:mo}:{rent:0,c:bb.c,t:bb.o.t,mo:mo};
+}
+function prev(){
+ document.querySelectorAll("[data-k=pri],[data-k=use]").forEach(function(b){
+  var k=b.dataset.k,v=b.dataset.v,s=Object.assign({},S),p=b.querySelector(".pv");s[k]=isNaN(+v)?v:+v;var d=decide(s);
+  p.textContent=k==="use"?$f(s.use*2.49)+"/mo \u00b7 "+(d.rent?"Rent":"Buy"):(d.rent?"Rent \u00b7 "+$f(d.mo)+"/mo":$f(d.c)+(d.t!=="n/a"?" \u00b7 "+d.t+" t/s":""));
+ });
+}
+function sync(){
+ document.querySelectorAll("[data-k]").forEach(function(b){b.classList.toggle("on",String(S[b.dataset.k])===b.dataset.v)});
+ document.querySelectorAll(".seg").forEach(function(g){var bs=[].slice.call(g.querySelectorAll(".sg"));g.style.setProperty("--i",Math.max(0,bs.findIndex(function(x){return x.classList.contains("on")})))});
+}
+function run(){
+ var mo=S.use*2.49,pl={speed:"speed",quality:"quality",ctx:"long prompts",calm:"quiet and simple"}[S.pri];
+ var el=O.map(function(o){return{o:o,c:o.c(S.own),f:fit(o)}}).filter(function(r){return r.c<=S.budget}).sort(function(a,b){return b.f-a.f});
+ var bb=el[0],be=bb?bb.c/mo:0,rent=!bb||be>18,h,st,alt="";
+ if(rent){st=RENT.st;
+  h='<div class="top"><span class="tag">Rent instead</span>'+pvd(RENT.n)+'</div><div class="big">'+RENT.n+'</div><p class="mut">'+(bb?"At your usage, renting stays cheaper than buying for over "+Math.floor(be)+" months.":"Nothing meets your budget and hardware, so rent while you save.")+' RunPod bills by the hour, no upfront cost.</p><div class="stats"><div><b>$0</b><span>upfront</span></div><div><b>'+$f(mo)+'</b><span>per month</span></div><div><b>4-bit</b><span>Flash-Next</span></div></div><p class="why"><b>Why:</b> '+(bb?"the cheapest good buy ("+bb.o.n+", "+$f(bb.c)+") takes "+be.toFixed(0)+" months to pay off.":"your budget is below every 128GB route.")+'</p>';
+  alt=bb?'<div class="alt"><span>'+bb.o.n+'</span><span>'+$f(bb.c)+'</span></div>':'';
+ }else{var o=bb.o;st=o.st;
+  h='<div class="top"><span class="tag">Best fit</span>'+pvd(o.n)+'</div><div class="big">'+o.n+'</div><p class="mut">'+o.note+'</p><div class="stats"><div><b>'+$f(bb.c)+'</b><span>'+(o.est&&o.est(S.own)?"upfront (est)":"upfront")+'</span></div><div><b>'+o.bits+'-bit</b><span>Flash-Next</span></div><div><b>'+o.t+'</b><span>tokens/sec</span></div></div><p class="why"><b>Why:</b> top pick for '+pl+' within '+$f(S.budget)+'. Renting the same would cost '+$f(mo)+'/month, so buying pays off in '+(be<1?"under a month":be.toFixed(0)+" months")+'.</p>';
+  alt=el.slice(1,4).map(function(r){return '<div class="alt"><span>'+r.o.n+'</span><span>'+$f(r.c)+'</span></div>'}).join("")+'<div class="alt"><span>Rent RTX PRO 6000</span><span>'+$f(mo)+'/mo</span></div>';}
+ $("verdict").innerHTML=h;$("alt").innerHTML=cmp(rent?null:bb.o.n);prev();
+ $("steps").innerHTML=st.map(function(s){return '<label><input type="checkbox"><span>'+L(s)+'</span></label>'}).join("");
+ var cb=document.querySelectorAll("#steps input");
+ function p(){var n=document.querySelectorAll("#steps input:checked").length;$("pc").textContent=n+"/"+cb.length;$("pg").style.width=(n/cb.length*100)+"%"}
+ cb.forEach(function(c){c.onchange=p});p();
+}
+draw();run();
+</script></body></html>
